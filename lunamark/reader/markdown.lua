@@ -13,8 +13,7 @@ local P, R, S, V, C, Cg, Cb, Cmt, Cc, Cf, Ct, B, Cs =
   lpeg.Cmt, lpeg.Cc, lpeg.Cf, lpeg.Ct, lpeg.B, lpeg.Cs
 local lpegmatch = lpeg.match
 local expand_tabs_in_line = util.expand_tabs_in_line
-local unicode = require("unicode")
-local utf8 = unicode.utf8
+local utf8 = require("utf8")
 
 local M = {}
 

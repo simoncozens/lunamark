@@ -5,8 +5,7 @@
 
 local M = {}
 
-local unicode=require("unicode")
-local utf8=unicode.utf8
+local utf8=require("utf8")
 
 local character_entities = {
   ["quot"] = 0x0022,
