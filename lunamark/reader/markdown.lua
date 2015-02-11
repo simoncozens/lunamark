@@ -281,7 +281,7 @@ function M.new(writer, options)
   end
 
   local closeticks  = space^-1 *
-                      Cmt(C(backtick^1) * Cb("ticks"), captures_equal_length)
+                      Cmt(C(backtick^1) * Cb("ticks"), captures_equal_length)*1
 
   local intickschar = (any - S(" \n\r`"))
                     + (newline * -blankline)
@@ -533,7 +533,7 @@ function M.new(writer, options)
     return lpegmatch(in_matched(t),s,pos)
   end
 
-  local in_matched_block_tags = Cmt(#openelt_block, parse_matched_tags)
+  local in_matched_block_tags = Cmt(#openelt_block, parse_matched_tags)*1
 
   local displayhtml = htmlcomment
                     + emptyelt_block
