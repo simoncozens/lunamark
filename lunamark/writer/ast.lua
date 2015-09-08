@@ -52,8 +52,9 @@ function M.new(options)
   end
   AST.listitem = AST.genericCommand("listitem")
   AST.bulletlist = function (items)
-    items.tag = "bulletlist"
-    return items
+    local node = {tag = "bulletlist"}
+    for i=1,#items do node[i] = AST.listitem(items[i]) end
+    return node
   end
   AST.link = function(lab, src, tit)
     return { [1] = lab, tag = "link", href = src }
