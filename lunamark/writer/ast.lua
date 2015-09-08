@@ -11,10 +11,37 @@ function M.new(options)
   local options = options or {}
   local AST = generic.new(options)
 
-  function AST.merge(result) return result end
-  
+  function AST.merge(result)
+    local function walk(t)
+      local out = {}
+      for i = 1,#t do
+        local typ = type(t[i])
+        if typ == "string" and #t[i] > 0 then
+          if type(out[#out]) == "string" then
+            out[#out] = out[#out] .. t[i]
+          else
+            out[#out+1] = t[i]
+          end
+        elseif typ == "table" then
+          out[#out+1] = walk(t[i])
+          out[#out].tag = t[i].tag
+          if #(out[#out]) == 1 and type(out[#out][1]) == "table" then
+            local tag = out[#out][1].tag or out[#out].tag
+            out[#out] = out[#out][1]
+            out[#out].tag = tag
+          end
+        elseif typ == "function" then
+          out[#out+1] = t[i]()
+        end
+      end
+      return out
+    end
+    return walk(result)
+    -- return result
+  end
+
   AST.genericCommand = function(name) return function(s)
-      local node = { id = name }
+      local node = { tag = name }
       node[1] = s
       return node
     end
