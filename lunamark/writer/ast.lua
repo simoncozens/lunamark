@@ -25,11 +25,6 @@ function M.new(options)
         elseif typ == "table" then
           out[#out+1] = walk(t[i])
           out[#out].tag = t[i].tag
-          if #(out[#out]) == 1 and type(out[#out][1]) == "table" then
-            local tag = out[#out][1].tag or out[#out].tag
-            out[#out] = out[#out][1]
-            out[#out].tag = tag
-          end
         elseif typ == "function" then
           out[#out+1] = t[i]()
         end
