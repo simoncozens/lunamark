@@ -48,10 +48,21 @@ function M.new(options)
   end
 
   AST.strong = AST.genericCommand("strong")
+  AST.code = AST.genericCommand("code")
   AST.emphasis = AST.genericCommand("emphasis")
   AST.blockquote = AST.genericCommand("blockquote")
-  AST.verbatim =AST.genericCommand("verbatim")
-
+  AST.verbatim = AST.genericCommand("verbatim")
+  AST.header = function (s,level)
+    return (AST.genericCommand("sect"..level))(s)
+  end
+  AST.listitem = AST.genericCommand("listitem")
+  AST.bulletlist = function (items)
+    items.tag = "bulletlist"
+    return items
+  end
+  AST.link = function(lab, src, tit)
+    return { [1] = lab, tag = "link", href = src }
+  end
   return AST
 end
 
