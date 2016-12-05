@@ -1,4 +1,6 @@
-version=$(shell bin/lunamark --version | head -1)
+VERSION=0.5.0
+REVISION=1
+ROCKSPEC=lunamark-$(VERSION)-$(REVISION).rockspec
 date=$(shell date +%x)
 luas=lunamark.lua lunamark/*.lua lunamark/*/*.lua
 testfile=tmptest.txt
@@ -9,12 +11,31 @@ NUM ?= 25
 PROG ?= bin/lunamark
 TESTOPTS ?= --tidy
 
-all:
-	@echo Targets: test bench docs run-code-examples install clean
 
-.PHONY: test bench docs clean run-code-examples install website standalone
+all: build
+
+build: $(ROCKSPEC)
+	luarocks make $(ROCKSPEC)
+
+.PHONY: build test testall check rock bench docs clean run-code-examples install website standalone
+
+rock: $(ROCKSPEC)
+	luarocks --local make $(ROCKSPEC)
+
+check:
+	luacheck bin/lunamark lunamark/*.lua lunamark/*/*.lua
+
 test:
-	LUNAMARK_EXTENSIONS="" bin/shtest ${TESTOPTS} -p ${PROG} ${OPTS}
+	LUAPATH="?.lua;lunamark/?.lua;lunamark/?/?.lua;$$LUAPATH"
+	LUNAMARK_EXTENSIONS="" bin/shtest ${TESTOPTS} -d tests/Markdown_1.0.3 -p ${PROG} ${OPTS}
+	LUNAMARK_EXTENSIONS="" bin/shtest ${TESTOPTS} -d tests/lunamark -p ${PROG} ${OPTS}
+
+testall: test
+	LUAPATH="?.lua;lunamark/?.lua;lunamark/?/?.lua;$$LUAPATH"
+	LUNAMARK_EXTENSIONS="" bin/shtest ${TESTOPTS} -d tests/PHP_Markdown -p ${PROG} ${OPTS}
+
+$(ROCKSPEC): rockspec.in
+	sed -e "s/_VERSION/$(VERSION)/g; s/_REVISION/$(REVISION)/g" $< > $@
 
 ${benchtext}:
 	for i in tests/Markdown_1.0.3/*.test; do sed -e '1,/<<</d;/>>>/,$$d' "$$i" >> $@; echo >> $@.txt; done
