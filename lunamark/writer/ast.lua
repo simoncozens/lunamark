@@ -47,6 +47,7 @@ function M.new(options)
   end
 
   AST.strong = AST.genericCommand("strong")
+  AST.paragraph = AST.genericCommand("paragraph")
   AST.code = AST.genericCommand("code")
   AST.emphasis = AST.genericCommand("emphasis")
   AST.blockquote = AST.genericCommand("blockquote")
