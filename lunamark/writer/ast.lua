@@ -25,6 +25,10 @@ function M.new(options)
         elseif typ == "table" then
           out[#out+1] = walk(t[i])
           out[#out].tag = t[i].tag
+          -- Copy attributes
+          for key,value in pairs(t[i]) do
+            if type(key)=="string" then out[#out][key] = value end
+          end
         elseif typ == "function" then
           out[#out+1] = t[i]()
         end
@@ -58,6 +62,9 @@ function M.new(options)
   end
   AST.link = function(lab, src, tit)
     return { [1] = lab, tag = "link", href = src }
+  end
+  AST.image = function(lab, src, tit)
+    return { tag = "image", src=src, [1]=lab }
   end
   return AST
 end
